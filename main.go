@@ -22,7 +22,7 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println("Successful.")
-	
+
 	firstUpdate := 0
 	lastUpdate := 0
 	var update api.Update
@@ -44,7 +44,7 @@ func main() {
 			}
 		}
 
-		game.GameUpdate(client)
+		game.Update(client)
 
 		time.Sleep(time.Millisecond * 100)
 	}

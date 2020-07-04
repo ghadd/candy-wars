@@ -92,7 +92,7 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 					log.Println("Unable to update table games: ", err)
 				}
 
-				if len(gm.Players) >= game_model.PlayersCount {
+				if len(gm.Players) >= config.PlayersCount {
 					gm.State = game_model.StateChoosingClan
 					err = dbh.Update("games", "state", gm.State, "game_id", gm.GameID)
 					if err != nil {

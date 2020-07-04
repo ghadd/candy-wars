@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/ghadd/candy-wars/api"
+	"github.com/ghadd/candy-wars/config"
 	"github.com/ghadd/candy-wars/database"
 	"github.com/ghadd/candy-wars/drawers"
-	"github.com/ghadd/candy-wars/game_model"
 	"log"
 	"strconv"
 )
@@ -75,7 +75,7 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 	if ind == -1 {
 		_, err = client.SendMessage(api.Message{
 			ChatID: query.FromUser.ID,
-			Text: "You are not found in game.",
+			Text:   "You are not found in game.",
 		})
 		if err != nil {
 			log.Println(err)
@@ -106,10 +106,9 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 		log.Println(err)
 	}
 
-
-	_, err = client.SendMessage(api.Message {
+	_, err = client.SendMessage(api.Message{
 		ChatID: query.FromUser.ID,
-		Text: "Wait until other users find their clans.",
+		Text:   "Wait until other users find their clans.",
 	})
 	if err != nil {
 		log.Println(err)
@@ -126,7 +125,7 @@ func SendCurrentPhoto(client *api.Client, user api.User) {
 	}
 
 	photoLocation := fmt.Sprintf("temp/%d.png", user.ID)
-	err := drawers.CreatePartViewPhoto(gm.Locations, gm.Players, player.X, player.Y, game_model.Horizon, strconv.Itoa(user.ID))
+	err := drawers.CreatePartViewPhoto(gm.Locations, gm.Players, player.X, player.Y, config.Horizon, strconv.Itoa(user.ID))
 	if err != nil {
 		log.Println(err)
 	}

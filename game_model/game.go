@@ -15,9 +15,6 @@ const (
 	StateEnded        = iota
 )
 
-const PlayersCount = 3
-const Horizon = 1
-
 type Game struct {
 	GameID int
 

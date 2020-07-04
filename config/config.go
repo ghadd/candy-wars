@@ -1,8 +1,14 @@
 package config
 
 const (
-	BotToken = "0000000:CorrectToken"
+	BotToken = "1285255270:AAEjv4wFeOKp08oX5cUYYjoekExBAU6JNfo"
 	DevID    = 662834330
+)
+
+const (
+	DefaultFieldDimension = 9
+	PlayersCount          = 3
+	Horizon               = 1
 )
 
 // Separated in order to make iotas work properly

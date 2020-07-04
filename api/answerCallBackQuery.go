@@ -10,6 +10,11 @@ import (
 	"strconv"
 )
 
+/*
+	AnswerCallBackQuery is used to tell the user that his/her callback query coming with inline button press
+	is being processed.
+	IF `alert` is set to true, the popup message comes, otherwise - auto closing top-bar only.
+*/
 func (c *Client) AnswerCallBackQuery(query CallBackQuery, text string, alert bool) error {
 	method := "/answerCallbackQuery"
 	values := url.Values{}

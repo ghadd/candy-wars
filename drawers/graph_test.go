@@ -1,9 +1,6 @@
 package drawers
 
 import (
-	"github.com/ghadd/candy-wars/api"
-	"github.com/ghadd/candy-wars/models"
-	"math/rand"
 	"testing"
 )
 
@@ -36,7 +33,7 @@ func Test_scale(t *testing.T) {
 	}
 }
 
-func Test_drawBackground(t *testing.T) { // just as useless as aqua from konosuba(who watched knows what i mean :) )
+func Test_drawBackground(t *testing.T) {
 	tests := []struct {
 		name       string
 		x, y, w, h int
@@ -70,7 +67,7 @@ func Test_drawGrid(t *testing.T) {
 		dimension int
 	}{
 		{
-			"pointless but ok", -3,
+			"test", -3,
 		},
 	}
 
@@ -80,112 +77,5 @@ func Test_drawGrid(t *testing.T) {
 				t.Errorf("got value %d negative, want %d positive", test.dimension, test.dimension)
 			}
 		})
-	}
-}
-
-func Test_CreatePartViewPhoto(t *testing.T) {
-	locations := []models.Location{
-		&models.CandyFactory{
-			ObjectName: "cf1",
-			SmallPic:   "photos/candy_factory.png",
-			X:          3, Y: 4,
-		},
-		&models.Chest{
-			ObjectName: "ch1",
-			SmallPic:   "photos/chest.png",
-			X:          4, Y: 6,
-		},
-	}
-
-	p1 := *models.NewPlayer(api.User{}, 1, 2)
-	p1.SmallPic = "photos/enemy.png"
-	p2 := *models.NewPlayer(api.User{}, 3, 7)
-	p2.SmallPic = "photos/enemy.png"
-
-	players := []models.Player{
-		p1, p2,
-	}
-
-	err := CreatePartViewPhoto(locations, players,4, 4, 1, "test_part_view")
-	if err != nil {
-		t.Errorf("Expected nil error, got %v", err)
-	}
-}
-
-func Test_CreateMapViewPhoto(t *testing.T) {
-	locations := []models.Location{
-		&models.CandyFactory{
-			ObjectName: "cf1",
-			SmallPic:   "photos/candy_factory.png",
-			X:          3,
-			Y:          4,
-		},
-		&models.Chest{
-			ObjectName: "ch1",
-			SmallPic:   "photos/chest.png",
-			X:          4,
-			Y:          6,
-		},
-	}
-
-	p1 := *models.NewPlayer(api.User{}, 1, 2)
-	p1.SmallPic = "photos/enemy.png"
-	p2 := *models.NewPlayer(api.User{}, 3, 7)
-	p2.SmallPic = "photos/enemy.png"
-
-	players := []models.Player{
-		p1, p2,
-	}
-
-
-	visited := make([][]bool, defaultDimension)
-	for i := 0; i < defaultDimension; i++ {
-		visited[i] = make([]bool, defaultDimension)
-	}
-
-	for i := 0; i < defaultDimension; i++ {
-		for j := 0; j < defaultDimension; j++ {
-			r := rand.Intn(100)
-			if r > 50 {
-				visited[i][j] = true
-			} else {
-				visited[i][j] = false
-			}
-		}
-	}
-
-	err := CreateMapViewPhoto(locations, players, visited, "test_map_view")
-
-	if err != nil {
-		t.Errorf("Expected nil error, got %v", err)
-	}
-}
-
-func Test_CreateFullViewPhoto(t *testing.T) {
-	locations := []models.Location{
-		&models.CandyFactory{
-			ObjectName: "cf1",
-			SmallPic:   "photos/candy_factory.png",
-			X:          3, Y: 4,
-		},
-		&models.Chest{
-			ObjectName: "ch1",
-			SmallPic:   "photos/chest.png",
-			X:          4, Y: 6,
-		},
-	}
-
-	p1 := *models.NewPlayer(api.User{}, 1, 2)
-	p1.SmallPic = "photos/enemy.png"
-	p2 := *models.NewPlayer(api.User{}, 3, 7)
-	p2.SmallPic = "photos/enemy.png"
-
-	players := []models.Player{
-		p1, p2,
-	}
-
-	err := CreateFullViewPhoto(locations, players, "test_full_view")
-	if err != nil {
-		t.Errorf("Expected nil error, got %v", err)
 	}
 }

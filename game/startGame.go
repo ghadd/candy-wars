@@ -9,31 +9,38 @@ import (
 )
 
 func StartGames(client *api.Client) {
+	// Setting up database handler
 	dbh, err := database.NewDBHandler()
 	if err != nil {
 		log.Println(err)
 	}
 
+	// getting all games from database
 	games := dbh.GetGames()
 
 	for _, gm := range games {
+		// skipping all games which are not in Choosing clan state as they don't interest us in this case
 		if gm.State != game_model.StateChoosingClan {
 			continue
 		}
 
+		// otherwise getting that game' players
 		players := gm.Players
 		ready := len(players) > 0
 		for _, player := range players {
+			// if someone didn't choose their clan yet -> game is not ready to be started
 			if player.Clan == "" {
 				ready = false
 			}
 		}
 
+		// todo perform timing join
+
 		if ready {
 			for _, p := range players {
 				_, err = client.SendMessage(api.Message{
 					ChatID: p.PlayerId,
-					Text: "Game is starting. Be ready.",
+					Text:   "Game is starting. Be ready.",
 				})
 			}
 
@@ -77,4 +84,3 @@ func sendFirstGameMessage(client *api.Client, gm *game_model.Game) {
 
 	SendMoveButtons(client, api.User{ID: gm.PlayerID})
 }
-

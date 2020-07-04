@@ -15,10 +15,12 @@ const (
 	testSendToID = 662834330
 )
 
+// API client that symbolizes the bot
 type Client struct {
 	token string
 }
 
+// Registers and validates the token
 func (c *Client) SetToken(token string) error {
 	c.token = token
 	method := "/getMe"
@@ -44,6 +46,7 @@ func (c *Client) SetToken(token string) error {
 	return errors.New(string(bytes))
 }
 
+// Basic constructor for making it easy to create a client.
 func NewClient(token string) (c *Client, err error) {
 	c = new(Client)
 	err = c.SetToken(token)

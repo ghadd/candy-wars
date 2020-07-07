@@ -6,10 +6,9 @@ import (
 	"github.com/ghadd/candy-wars/models"
 	"github.com/nfnt/resize"
 	"gopkg.in/fogleman/gg.v1"
-	"image"
 	"image/color"
 	"log"
-	"os"
+	"strings"
 )
 
 //CreateFullViewPhoto draws a full map with all the locations no matter if they are not visible. Only for admins.
@@ -25,16 +24,15 @@ func CreateFullViewPhoto(locations []models.Location, players []models.Player, s
 
 	for _, l := range objects {
 		locX, locY := l.GetLocation()
-		f, err := os.Open(l.GetSmallPic())
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer f.Close()
 
-		img, _, err := image.Decode(f)
-		if err != nil {
-			log.Fatal(err)
+		imageName := l.GetSmallPic()[strings.Index(l.GetSmallPic(), "/")+1:]
+		if !loaded {
+			err := loadImages()
+			if err != nil {
+				log.Println(err)
+			}
 		}
+		img := images[imageName]
 
 		crop := resize.Resize(uint(windowConfigF)/9, uint(windowConfigF)/9, img, resize.Lanczos3)
 

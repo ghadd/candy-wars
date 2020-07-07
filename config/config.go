@@ -7,7 +7,7 @@ const (
 
 const (
 	DefaultFieldDimension = 9
-	PlayersCount          = 3
+	PlayersCount          = 2
 	Horizon               = 1
 )
 

@@ -21,6 +21,7 @@ images;
 var (
 	imageCount int
 	loaded     = false
+	setUpTemp  = false
 	images     map[string]image.Image
 )
 
@@ -47,5 +48,31 @@ func loadImages() error {
 	}
 
 	loaded = true
+	return nil
+}
+
+func setUpTempFolder() error {
+	path := "temp"
+	mode := os.ModeDir
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.Mkdir(path, mode)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func SetUpAll() error {
+	err := loadImages()
+	if err != nil {
+		return err
+	}
+
+	err = setUpTempFolder()
+	if err != nil {
+		return err
+	}
 	return nil
 }

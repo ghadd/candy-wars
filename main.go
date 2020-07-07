@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/ghadd/candy-wars/api"
 	"github.com/ghadd/candy-wars/config"
+	"github.com/ghadd/candy-wars/drawers"
 	"github.com/ghadd/candy-wars/game"
 	"log"
 	"time"
@@ -13,8 +14,15 @@ var (
 )
 
 func main() {
-	// Setting up telegram bot client
+	// Setting up image engine
 	var err error
+
+	err = drawers.SetUpAll()
+	if err != nil {
+		log.Println(err)
+	}
+
+	// Setting up telegram bot client
 
 	log.Println("Connecting to bot api.")
 	client, err = api.NewClient(config.BotToken)

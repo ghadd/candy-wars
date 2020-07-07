@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/ghadd/candy-wars/game_model"
+
 	"github.com/ghadd/candy-wars/api"
 	"github.com/ghadd/candy-wars/models"
 )
@@ -108,6 +110,40 @@ func TestDBHandler(t *testing.T) {
 			}
 			if player.PlayerId != tests[i].ID || player.ObjectName != tests[i].Username {
 				t.Errorf("got Player (%d, %s ...), want User (%d, %s ...)", player.PlayerId, player.ObjectName, tests[i].ID, tests[i].Username)
+			}
+		})
+	}
+	//UpdateGame test
+	var games = []*game_model.Game{}
+	for i := 0; i < len(tests); i++ {
+		game, _ := game_model.NewGame(&tests[i])
+		game.GameID = i
+		games = append(games, game)
+	}
+	for _, tt := range games {
+		t.Run("Inserting games", func(t *testing.T) {
+			err := db.InsertGame(*tt)
+			if err != nil {
+				t.Errorf("Got error: %v", err)
+			}
+		})
+	}
+	for i, tt := range games {
+		err := db.InsertGame(*tt)
+		newUID := i * 11111
+		testname := fmt.Sprintf("Update game (%d, %d) to game (%d, %d)", tt.GameID, tt.PlayerID, tt.GameID, newUID)
+		t.Run(testname, func(t *testing.T) {
+			tt.PlayerID = newUID
+			err = db.UpdateGame(*tt)
+			if err != nil {
+				t.Errorf("Got error: %v", err)
+			}
+			game, err := db.GetGameByID(tt.GameID)
+			if err != nil {
+				t.Errorf("Got error: %v", err)
+			}
+			if tt.GameID != game.GameID || newUID != game.PlayerID {
+				t.Errorf("got Game (%d, %d), want Game (%d, %d)", game.GameID, game.PlayerID, tt.GameID, tt.PlayerID)
 			}
 		})
 	}

@@ -1,5 +1,6 @@
 package database
 
+//ResetTables drops every table on server and create games table
 func ResetTables() error {
 	dbh, err := NewDBHandler()
 	if err != nil {

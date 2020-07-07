@@ -304,3 +304,21 @@ func (dbh *DBHandler) GetGames() []*game_model.Game {
 
 	return games
 }
+
+//UpdateGame updates game by id
+func (dbh *DBHandler) UpdateGame(game game_model.Game) error {
+	statement := fmt.Sprintf(`UPDATE games SET
+								game_json = ?,
+								player_id = ?,
+								startmove_time = ?,
+								players_json = ?,
+								red_spawn = ?,
+								green_spawn = ?,
+								blue_spawn = ?,
+								state = ?
+								WHERE game_id = %d;`, game.GameID)
+	_, err := dbh.Connection.Exec(statement, game.GameJSON, game.PlayerID, game.StartMoveTime, game.PlayersJSON,
+		game.RedSpawn, game.GreenSpawn, game.BlueSpawn, game.State)
+
+	return err
+}

@@ -45,7 +45,29 @@ func TestCreateFullViewPhoto(t *testing.T) {
 				[]models.Player{
 					*models.NewPlayer(api.User{ID: 123}, 5, 5),
 				},
-				"full-test",
+				"full-test1",
+			},
+			false,
+		},
+		{
+			"test",
+			args{
+				locs,
+				[]models.Player{
+					*models.NewPlayer(api.User{ID: 123}, 5, 5),
+				},
+				"full-test2",
+			},
+			false,
+		},
+		{
+			"test",
+			args{
+				locs,
+				[]models.Player{
+					*models.NewPlayer(api.User{ID: 123}, 5, 5),
+				},
+				"full-test3",
 			},
 			false,
 		},

@@ -6,19 +6,9 @@ import (
 	"github.com/ghadd/candy-wars/models"
 	"github.com/nfnt/resize"
 	"gopkg.in/fogleman/gg.v1"
-	"image"
 	"image/color"
 	"log"
-	"os"
-)
-
-const (
-	forestPath = "photos/forest.png"
-)
-
-var (
-	forestLoaded = false
-	forestImage  image.Image
+	"strings"
 )
 
 //CreateMapViewPhoto draws a full map but only areas that have been visited will be displayed.
@@ -33,16 +23,15 @@ func CreateMapViewPhoto(locations []models.Location, players []models.Player, vi
 
 	for _, l := range objects {
 		locX, locY := l.GetLocation()
-		f, err := os.Open(l.GetSmallPic())
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer f.Close()
 
-		img, _, err := image.Decode(f)
-		if err != nil {
-			log.Fatal(err)
+		imageName := l.GetSmallPic()[strings.Index(l.GetSmallPic(), "/")+1:]
+		if !loaded {
+			err := loadImages()
+			if err != nil {
+				log.Println(err)
+			}
 		}
+		img := images[imageName]
 
 		crop := resize.Resize(uint(windowConfigF)/9, uint(windowConfigF)/9, img, resize.Lanczos3)
 
@@ -56,19 +45,8 @@ func CreateMapViewPhoto(locations []models.Location, players []models.Player, vi
 }
 
 func drawForest(context *gg.Context, locX int, locY int) {
-	if !forestLoaded {
-		fl, err := os.Open(forestPath)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		img, _, err := image.Decode(fl)
-		if err != nil {
-			log.Fatal(err)
-		}
-		forestImage = resize.Resize(uint(windowConfigF)/uint(config.DefaultFieldDimension), uint(windowConfigF)/uint(config.DefaultFieldDimension), img, resize.Lanczos3)
-		forestLoaded = true
-	}
+	img := images["forest.png"]
+	forestImage := resize.Resize(uint(windowConfigF)/uint(config.DefaultFieldDimension), uint(windowConfigF)/uint(config.DefaultFieldDimension), img, resize.Lanczos3)
 
 	context.DrawImage(forestImage, int(scale(float64(locX), 0, float64(config.DefaultFieldDimension), 0, windowConfigF)), int(scale(float64(locY), 0, float64(config.DefaultFieldDimension), 0, windowConfigF)))
 }

@@ -6,10 +6,9 @@ import (
 	"github.com/ghadd/candy-wars/models"
 	"github.com/nfnt/resize"
 	"gopkg.in/fogleman/gg.v1"
-	"image"
 	"image/color"
 	"log"
-	"os"
+	"strings"
 )
 
 //CreatePartViewPhoto draws a part-view map where objects are displayed on players horizon.
@@ -31,16 +30,15 @@ func CreatePartViewPhoto(locations []models.Location, players []models.Player, d
 
 	for _, l := range objects {
 		locX, locY := l.GetLocation()
-		f, err := os.Open(l.GetSmallPic())
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer f.Close()
 
-		img, _, err := image.Decode(f)
-		if err != nil {
-			log.Fatal(err)
+		imageName := l.GetSmallPic()[strings.Index(l.GetSmallPic(), "/")+1:]
+		if !loaded {
+			err := loadImages()
+			if err != nil {
+				log.Println(err)
+			}
 		}
+		img := images[imageName]
 
 		x := scale(float64(locX-topLeftX), 0, float64(horizon), 0, windowConfig) // windowConfig * (locX - topLeftX) / horizon
 		y := scale(float64(locY-topLeftY), 0, float64(horizon), 0, windowConfig) // windowConfig * (locY - topLeftY) / horizon

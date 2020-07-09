@@ -22,7 +22,7 @@ func NewDBHandler() (*DBHandler, error) {
 	return dbh, err
 }
 
-//NewDBHandler returns pointer to the default ready to use DBHandler
+//NewDBHandlerWithPath returns pointer to the default ready to use DBHandler with path specified
 func NewDBHandlerWithPath(path string) (*DBHandler, error) {
 	dbh := &DBHandler{
 		DriverName: Driver,

@@ -81,6 +81,23 @@ func (dbh *DBHandler) CreatePlayersTable() error {
 	return err
 }
 
+//CreateGamesTable creates a table for games info, active player and
+//his time mark for permission to start move
+func (dbh *DBHandler) CreateGamesTable() error {
+	_, err := dbh.Connection.Exec(
+		`CREATE TABLE IF NOT EXISTS games (
+    		   		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
+					game_json TEXT,
+					player_id INTEGER,
+					startmove_time INTEGER,
+					players_json TEXT,
+					red_spawn INTEGER,
+					green_spawn INTEGER,
+					blue_spawn INTEGER,
+					state INTEGER);`)
+	return err
+}
+
 //InsertUser adds a user to the Users table
 func (dbh *DBHandler) InsertUser(user api.User) error {
 	//User structure is described in the api package file user.go
@@ -207,23 +224,6 @@ func (dbh *DBHandler) GetPlayerByID(id int) (*models.Player, error) {
 	return player, err
 }
 
-//CreateGamesTable creates a table for games info, active player and
-//his time mark for permission to start move
-func (dbh *DBHandler) CreateGamesTable() error {
-	_, err := dbh.Connection.Exec(
-		`CREATE TABLE IF NOT EXISTS games (
-    		   		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
-					game_json TEXT,
-					player_id INTEGER,
-					startmove_time INTEGER,
-					players_json TEXT,
-					red_spawn INTEGER,
-					green_spawn INTEGER,
-					blue_spawn INTEGER,
-					state INTEGER);`)
-	return err
-}
-
 //InsertGame adds a game to the Games table
 func (dbh *DBHandler) InsertGame(game game_model.Game) error {
 	bytes, err := json.Marshal(game.Locations)
@@ -303,4 +303,60 @@ func (dbh *DBHandler) GetGames() []*game_model.Game {
 	}
 
 	return games
+}
+
+//UpdateGame updates game by id
+func (dbh *DBHandler) UpdateGame(game game_model.Game) error {
+	statement := fmt.Sprintf(`UPDATE games SET
+								game_json = ?,
+								player_id = ?,
+								startmove_time = ?,
+								players_json = ?,
+								red_spawn = ?,
+								green_spawn = ?,
+								blue_spawn = ?,
+								state = ?
+								WHERE game_id = %d;`, game.GameID)
+	_, err := dbh.Connection.Exec(statement, game.GameJSON, game.PlayerID, game.StartMoveTime, game.PlayersJSON,
+		game.RedSpawn, game.GreenSpawn, game.BlueSpawn, game.State)
+
+	return err
+}
+
+//UpdatePlayer updates player by id
+func (dbh *DBHandler) UpdatePlayer(player models.Player) error {
+	statement := fmt.Sprintf(`UPDATE players SET
+								nickname = ?,
+								message = ?,
+								x = ?,
+								y = ?,
+								clan = ?,
+								smallPic = ?,
+								bigPic = ?,
+								active = ?,
+								health = ?,
+								dexterity = ?,
+								mastery = ?,
+								damage = ?,
+								speed = ?,
+								visibility = ?,
+								candies = ?,
+								cakes = ?,
+								gold = ?
+								WHERE player_id = %d;`, player.PlayerId)
+	_, err := dbh.Connection.Exec(statement, player.ObjectName, player.Message, player.X, player.Y, player.Clan, player.SmallPic, player.BigPic, player.Active,
+		player.Health, player.Dexterity, player.Mastery, player.Damage, player.Speed, player.Visibility, player.ScoreCandy, player.ScoreCake, player.ScoreGold)
+
+	return err
+}
+
+//UpdateUser updates user by id
+func (dbh *DBHandler) UpdateUser(user api.User) error {
+	statement := fmt.Sprintf(`UPDATE users SET
+								nickname = ?,
+								state = ?
+								WHERE telegram_id = %d;`, user.ID)
+	_, err := dbh.Connection.Exec(statement, user.Username, user.State)
+
+	return err
 }
